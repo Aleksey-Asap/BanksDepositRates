@@ -99,8 +99,8 @@ offers_df['final_rate'] = offers_df[['rate', 'online_rate']].max(axis=1) # вы�
 print('Saving Tables ...')
 
 # сохраняем в excel
-bank_df.to_excel('banks.xlsx', index=False)
-offers_df.to_excel('offers.xlsx', index=False)
+bank_df.to_excel('data/banks.xlsx', index=False)
+offers_df.to_excel('data/offers.xlsx', index=False)
 
 # логирование (вывод в консоль)
 print('Done!')
