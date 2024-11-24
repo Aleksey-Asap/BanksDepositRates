@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
-      POSTGRES_DB:  
+      POSTGRES_DB: postgres
     volumes:
       - "../pg_db_volume:/var/lib/postgresql/data:rw"
     ports:
