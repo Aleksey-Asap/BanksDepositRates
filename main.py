@@ -1,11 +1,18 @@
 import pandas as pd
 import requests
+import logging
 
 from constants import (
     MAIN_URL,
     QUERY_PARAMS,
     BANK_DICT,
     OFFERS_DICT
+)
+
+# конфигурируем logging / INFO
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
 )
 
 
@@ -33,17 +40,14 @@ def get_online_rate(item):
         return 0
 
 # логирование (вывод в консоль)
-print('Make Request ...')
+logging.info('Make Request ...')
 
 # забираем данные с сайта, используя POST запрос
 response = requests.post(MAIN_URL, json=QUERY_PARAMS)
 data = response.json()
 
-# логирование (вывод в консоль)
-print('Get JSON -> Success!')
-
-# логирование (вывод в консоль)
-print('Parse JSON ...')
+logging.info('Get JSON -> Success!')
+logging.info('Parse JSON ...')
 
 # распарсиваем полченный ответ от сервера с данными (JSON) 
 for i, item in enumerate(data["items"], start=1):
@@ -76,9 +80,7 @@ for i, item in enumerate(data["items"], start=1):
             OFFERS_DICT["amount_from"].append(group_item["amount"]["from"])
             OFFERS_DICT["amount_to"].append(group_item["amount"]["to"])
 
-
-# логирование (вывод в консоль)
-print('Creating Tables ...')
+logging.info('Parse JSON -> Success!')
 
 # создаем таблицы для Банков и Предложений Банков
 bank_df = pd.DataFrame(BANK_DICT)
@@ -95,12 +97,12 @@ offers_df['rate'] = offers_df['rate'].apply(lambda x: x.strip(' до%'))
 offers_df['rate'] = offers_df['rate'].astype('float')
 offers_df['final_rate'] = offers_df[['rate', 'online_rate']].max(axis=1) # выбираем наибольшую ставку между "rate" и "online_rate"
 
-# логирование (вывод в консоль)
-print('Saving Tables ...')
+logging.info('Saving Tables ...')
 
 # сохраняем в excel
 bank_df.to_excel('data/banks.xlsx', index=False)
 offers_df.to_excel('data/offers.xlsx', index=False)
 
 # логирование (вывод в консоль)
-print('Done!')
+
+logging.info('Data Successfully Parsed and Saved!')
