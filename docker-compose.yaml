@@ -16,6 +16,7 @@ x-airflow-common: &airflow-common
     - ${AIRFLOW_PROJ_DIR:-.}/airflow_volume/logs:/opt/airflow/logs
     - ${AIRFLOW_PROJ_DIR:-.}/airflow_volume/config:/opt/airflow/config
     - ${AIRFLOW_PROJ_DIR:-.}/airflow_volume/plugins:/opt/airflow/plugins
+    - ${AIRFLOW_PROJ_DIR:-.}/requirements.txt:/requirements.txt           # install Python dependencies into AirFlow env
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
@@ -62,7 +63,8 @@ services:
   airflow-webserver:
     <<: *airflow-common
     container_name: airflow_webserver
-    command: webserver
+    command: >
+      bash -c "pip install -r /requirements.txt && airflow webserver"
     ports:
       - "${AIRFLOW_WEB_PORT}:8080"
     healthcheck:
