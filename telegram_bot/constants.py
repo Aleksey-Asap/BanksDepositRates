@@ -36,5 +36,3 @@ ORDER BY
     rate DESC
 LIMIT 10
 """
-
-

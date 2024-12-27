@@ -1,5 +1,6 @@
 import os
 import telebot
+import logging
 
 from telebot import types
 from dotenv import load_dotenv
@@ -14,12 +15,20 @@ from constants import (
 
 from db import get_interest_rate_data
 
+
+# конфигурируем logging / INFO
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+
 # подгружаем перменные среды
 load_dotenv()
 
 # определяем бота
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
+logging.info('Telegram Bot is up!')
 
 
 @bot.message_handler(commands=['start'])
@@ -46,7 +55,8 @@ def handle_message(message):
 
     if message.text == INTEREST_RATE_BUTTON_TEXT:
         banks_data = get_interest_rate_data()
-
+        
+        # красиво выводим сообщение по ставкам банков
         response = INTEREST_RATE_RESPONSE_HEADER
         for bank_data in banks_data:
             response += INTEREST_RATE_RESPONSE_STRUCTURE.format(**bank_data)
@@ -55,7 +65,7 @@ def handle_message(message):
 
         # отправляем финальное сообщение
         bot.send_message(message.chat.id, response)
+        logging.info('Successfully sent message | RATE')
 
 
-# TODO: проверить позже
 bot.infinity_polling()
