@@ -102,8 +102,8 @@ offers_df['date'] = pd.Timestamp.today()
 logging.info('Saving Tables ...')
 
 # сохраняем в excel
-bank_df.to_excel('data/banks.xlsx', index=False)
-offers_df.to_excel('data/offers.xlsx', index=False)
+bank_df.to_excel('scraped_data/banks.xlsx', index=False)
+offers_df.to_excel('scraped_data/offers.xlsx', index=False)
 
 # логирование (вывод в консоль)
 

@@ -4,7 +4,7 @@ import logging
 
 from telebot import types
 from dotenv import load_dotenv
-from constants import (
+from data_scraper.constants import (
     START_MESSAGE,
     GRAPH_BUTTON_TEXT,
     INTEREST_RATE_BUTTON_TEXT,
