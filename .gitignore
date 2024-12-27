@@ -173,5 +173,4 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-airflow_volume/
 bank_deposits/
