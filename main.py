@@ -50,8 +50,7 @@ logging.info('Get JSON -> Success!')
 logging.info('Parse JSON ...')
 
 # распарсиваем полченный ответ от сервера с данными (JSON) 
-for i, item in enumerate(data["items"], start=1):
-    BANK_DICT["id"].append(i) # добавляем id/индекс банка, используя enumerate()
+for item in data["items"]:
     BANK_DICT["name"].append(item["organization"]["name"]["short"])
     BANK_DICT["rate"].append(item["rate"])
 
@@ -66,8 +65,7 @@ for i, item in enumerate(data["items"], start=1):
     BANK_DICT["offer_count"].append(item["groupCount"])
 
     if item["groupCount"] > 0:
-        for group_item in item['groupItems']:  #enumerate - каждому объекту задает индекс
-            OFFERS_DICT["bank_id"].append(i)
+        for group_item in item['groupItems']:
             OFFERS_DICT["bank_name"].append(item["organization"]["name"]["short"])
             OFFERS_DICT["rate"].append(group_item["rate"])
 
@@ -96,6 +94,10 @@ bank_df['final_rate'] = bank_df[['rate', 'online_rate']].max(axis=1) # пара�
 offers_df['rate'] = offers_df['rate'].apply(lambda x: x.strip(' до%'))
 offers_df['rate'] = offers_df['rate'].astype('float')
 offers_df['final_rate'] = offers_df[['rate', 'online_rate']].max(axis=1) # выбираем наибольшую ставку между "rate" и "online_rate"
+
+# добавляем дату в DataFrames
+bank_df['date'] = pd.Timestamp.today().date()
+offers_df['date'] = pd.Timestamp.today().date()
 
 logging.info('Saving Tables ...')
 

@@ -22,7 +22,6 @@ QUERY_PARAMS = {
 
 # структура будущих Pandas DataFrame для таблицы банки - "banks" и предложения - "offers"
 BANK_DICT = {
-    "id": [],
     "name": [],
     "rate": [],
     "online_rate": [],
@@ -33,7 +32,6 @@ BANK_DICT = {
 }
 
 OFFERS_DICT = {
-    "bank_id": [],
     "bank_name": [],
     "rate": [],
     "online_rate": [],
