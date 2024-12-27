@@ -96,8 +96,8 @@ offers_df['rate'] = offers_df['rate'].astype('float')
 offers_df['final_rate'] = offers_df[['rate', 'online_rate']].max(axis=1) # выбираем наибольшую ставку между "rate" и "online_rate"
 
 # добавляем дату в DataFrames
-bank_df['date'] = pd.Timestamp.today().date()
-offers_df['date'] = pd.Timestamp.today().date()
+bank_df['date'] = pd.Timestamp.today()
+offers_df['date'] = pd.Timestamp.today()
 
 logging.info('Saving Tables ...')
 
