@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "App to check credit rates of russian banks from a sravni ru"
 readme = "README.md"
 authors = [
-    "vladrask.ds@gmail.com"
+    {name = "Vladislav Raskoshinskii", email = "vladrask.ds@gmail.com"}
 ]
 dependencies = [
     "pandas>=1.5.0",
