@@ -25,10 +25,8 @@ requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = [
-    "data_scraper",
-    "telegram_bot"
-]
+# Include the specific directories here, avoid conflicts
+packages = ["data_scraper", "telegram_bot"]
 
 [tool.setuptools.packages.find]
 include = ["data_scraper", "telegram_bot"]
