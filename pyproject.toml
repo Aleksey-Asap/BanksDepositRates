@@ -27,8 +27,3 @@ build-backend = "setuptools.build_meta"
 # If using setuptools, make sure this section is correctly defined
 [tool.setuptools]
 packages = ["data_scraper", "telegram_bot"]
-
-# Use a correct find directive if you're dynamically finding packages
-[tool.setuptools.packages.find]
-include = ["data_scraper", "telegram_bot"]
-exclude = ["notebooks"]
