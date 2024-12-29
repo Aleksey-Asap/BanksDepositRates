@@ -1,5 +1,5 @@
 [project]
-name = "Bank Rates"
+name = "bank-rates"
 version = "0.1.0"
 description = "App to check credit rates of russian banks from a sravni ru"
 readme = "README.md"
