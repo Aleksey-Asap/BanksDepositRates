@@ -38,73 +38,74 @@ def get_online_rate(item):
     # except блок срабатывает когда возникает ошибка в try. Exception - это любая ошибка которая может возникнуть в try
     except Exception:
         return 0
+    
 
-# логирование (вывод в консоль)
-logging.info('Make Request ...')
+def get_data():
+    # логирование (вывод в консоль)
+    logging.info('Make Request ...')
 
-# забираем данные с сайта, используя POST запрос
-response = requests.post(MAIN_URL, json=QUERY_PARAMS)
-data = response.json()
+    # забираем данные с сайта, используя POST запрос
+    response = requests.post(MAIN_URL, json=QUERY_PARAMS)
+    data = response.json()
 
-logging.info('Get JSON -> Success!')
-logging.info('Parse JSON ...')
+    logging.info('Get JSON -> Success!')
+    logging.info('Parse JSON ...')
 
-# распарсиваем полченный ответ от сервера с данными (JSON) 
-for item in data["items"]:
-    BANK_DICT["name"].append(item["organization"]["name"]["short"])
-    BANK_DICT["rate"].append(item["rate"])
+    # распарсиваем полченный ответ от сервера с данными (JSON) 
+    for item in data["items"]:
+        BANK_DICT["name"].append(item["organization"]["name"]["short"])
+        BANK_DICT["rate"].append(item["rate"])
 
-    # добавляем ставку онлайн банков
-    BANK_DICT["online_rate"].append(
-        get_online_rate(item)
-    )
+        # добавляем ставку онлайн банков
+        BANK_DICT["online_rate"].append(
+            get_online_rate(item)
+        )
 
-    BANK_DICT["term"].append(item["term"])
-    BANK_DICT["amount_from"].append(item["amount"]["from"])
-    BANK_DICT["amount_to"].append(item["amount"]["to"])
-    BANK_DICT["offer_count"].append(item["groupCount"])
+        BANK_DICT["term"].append(item["term"])
+        BANK_DICT["amount_from"].append(item["amount"]["from"])
+        BANK_DICT["amount_to"].append(item["amount"]["to"])
+        BANK_DICT["offer_count"].append(item["groupCount"])
 
-    if item["groupCount"] > 0:
-        for group_item in item['groupItems']:
-            OFFERS_DICT["bank_name"].append(item["organization"]["name"]["short"])
-            OFFERS_DICT["rate"].append(group_item["rate"])
+        if item["groupCount"] > 0:
+            for group_item in item['groupItems']:
+                OFFERS_DICT["bank_name"].append(item["organization"]["name"]["short"])
+                OFFERS_DICT["rate"].append(group_item["rate"])
 
-            # добавляем ставку онлайн банков
-            OFFERS_DICT["online_rate"].append(
-                get_online_rate(group_item)
-            )
+                # добавляем ставку онлайн банков
+                OFFERS_DICT["online_rate"].append(
+                    get_online_rate(group_item)
+                )
 
-            OFFERS_DICT["term"].append(group_item["term"])
-            OFFERS_DICT["amount_from"].append(group_item["amount"]["from"])
-            OFFERS_DICT["amount_to"].append(group_item["amount"]["to"])
+                OFFERS_DICT["term"].append(group_item["term"])
+                OFFERS_DICT["amount_from"].append(group_item["amount"]["from"])
+                OFFERS_DICT["amount_to"].append(group_item["amount"]["to"])
 
-logging.info('Parse JSON -> Success!')
+    logging.info('Parse JSON -> Success!')
 
-# создаем таблицы для Банков и Предложений Банков
-bank_df = pd.DataFrame(BANK_DICT)
-offers_df = pd.DataFrame(OFFERS_DICT)
+    # создаем таблицы для Банков и Предложений Банков
+    bank_df = pd.DataFrame(BANK_DICT)
+    offers_df = pd.DataFrame(OFFERS_DICT)
 
-# добавим "final_rate", предварительно предобработаем "rate" -> убираем %
-bank_df['rate'] = bank_df['rate'].apply(lambda x: x.strip('до% ')) # возвращает строку
-bank_df['rate'] = bank_df['rate'].astype('float') # меняем тип данных на вещественный
+    # добавим "final_rate", предварительно предобработаем "rate" -> убираем %
+    bank_df['rate'] = bank_df['rate'].apply(lambda x: x.strip('до% ')) # возвращает строку
+    bank_df['rate'] = bank_df['rate'].astype('float') # меняем тип данных на вещественный
 
-# выбираем наибольшую ставку между "rate" и "online_rate"
-bank_df['final_rate'] = bank_df[['rate', 'online_rate']].max(axis=1) # параметр axis=1 говорит что нужно найти самое большое значение по строчке
+    # выбираем наибольшую ставку между "rate" и "online_rate"
+    bank_df['final_rate'] = bank_df[['rate', 'online_rate']].max(axis=1) # параметр axis=1 говорит что нужно найти самое большое значение по строчке
 
-offers_df['rate'] = offers_df['rate'].apply(lambda x: x.strip(' до%'))
-offers_df['rate'] = offers_df['rate'].astype('float')
-offers_df['final_rate'] = offers_df[['rate', 'online_rate']].max(axis=1) # выбираем наибольшую ставку между "rate" и "online_rate"
+    offers_df['rate'] = offers_df['rate'].apply(lambda x: x.strip(' до%'))
+    offers_df['rate'] = offers_df['rate'].astype('float')
+    offers_df['final_rate'] = offers_df[['rate', 'online_rate']].max(axis=1) # выбираем наибольшую ставку между "rate" и "online_rate"
 
-# добавляем дату в DataFrames
-bank_df['date'] = pd.Timestamp.today()
-offers_df['date'] = pd.Timestamp.today()
+    # добавляем дату в DataFrames
+    bank_df['date'] = pd.Timestamp.today()
+    offers_df['date'] = pd.Timestamp.today()
 
-logging.info('Saving Tables ...')
+    logging.info('Saving Tables ...')
 
-# сохраняем в excel
-bank_df.to_excel('scraped_data/banks.xlsx', index=False)
-offers_df.to_excel('scraped_data/offers.xlsx', index=False)
+    # сохраняем в excel
+    bank_df.to_excel('scraped_data/banks.xlsx', index=False)
+    offers_df.to_excel('scraped_data/offers.xlsx', index=False)
 
-# логирование (вывод в консоль)
-
-logging.info('Data Successfully Parsed and Saved!')
+    # логирование (вывод в консоль)
+    logging.info('Data Successfully Parsed and Saved!')

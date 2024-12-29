@@ -23,3 +23,13 @@ repository = "https://github.com/Aleksey-Asap/BanksDepositRates"
 [build-system]
 requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = [
+    "data_scraper",
+    "telegram_bot"
+]
+
+[tool.setuptools.packages.find]
+include = ["data_scraper", "telegram_bot"]
+exclude = ["notebooks"]

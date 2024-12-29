@@ -42,3 +42,8 @@ docker compose up -d # создает сервис, используя разл�
 4. Запустить команду в терминале
     4.1 docker compose up airflow-init -> initializes database
     4.2 docker compose up -> deploy full airflow service
+
+
+
+
+pip install git+https://github.com/Aleksey-Asap/BanksDepositRates@bot
