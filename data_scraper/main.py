@@ -104,8 +104,8 @@ def get_data():
     logging.info('Saving Tables ...')
 
     # сохраняем в excel
-    bank_df.to_excel('scraped_data/banks.xlsx', index=False)
-    offers_df.to_excel('scraped_data/offers.xlsx', index=False)
+    bank_df.to_excel('../notebooks/scraped_data/banks.xlsx', index=False)
+    offers_df.to_excel('../notebooks/scraped_data/offers.xlsx', index=False)
 
     # логирование (вывод в консоль)
     logging.info('Data Successfully Parsed and Saved!')
