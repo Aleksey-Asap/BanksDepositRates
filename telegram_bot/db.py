@@ -3,7 +3,13 @@ from sqlalchemy import create_engine
 from sqlalchemy.sql import text
 from dotenv import load_dotenv
 
-from .constants import INTEREST_RATE_QUERY
+from .constants import (
+    INTEREST_RATE_QUERY,
+    INTEREST_RATE_RESPONSE_STRUCTURE,
+    INTEREST_RATE_RESPONSE_HEADER,
+    INTEREST_RATE_RESPONSE_FOOTER
+)
+
 from .utils import is_docker_env
 
 # загружаем переменные среды
@@ -32,3 +38,18 @@ def get_interest_rate_data():
         columns = result.keys()
 
     return [dict(zip(columns, row)) for row in rows]
+
+
+def get_message():
+    """TODO"""
+    
+    # получаем данные из БД
+    banks_data = get_interest_rate_data()
+        
+    # формируем красивый ответ/response по ставкам банков
+    response = INTEREST_RATE_RESPONSE_HEADER
+    for bank_data in banks_data:
+        response += INTEREST_RATE_RESPONSE_STRUCTURE.format(**bank_data)
+
+    response += INTEREST_RATE_RESPONSE_FOOTER
+    return response

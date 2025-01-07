@@ -9,6 +9,8 @@ from .constants import (
     OFFERS_DICT
 )
 
+from typing import Tuple
+
 # конфигурируем logging / INFO
 logging.basicConfig(
     level=logging.INFO,
@@ -17,7 +19,7 @@ logging.basicConfig(
 
 
 # cписок необходимых функций для парсинга сайта
-def get_online_rate(item):
+def get_online_rate(item: dict) -> float:
     """
     Функция получающая онлайн ставку для банка (если имеется).
     Используем try/except для отлавливания ошибок. 
@@ -40,7 +42,7 @@ def get_online_rate(item):
         return 0
     
 
-def get_data():
+def request_data_from_sravni() -> Tuple[pd.DataFrame, pd.DataFrame]:
     # логирование (вывод в консоль)
     logging.info('Make Request ...')
 
@@ -66,6 +68,7 @@ def get_data():
         BANK_DICT["amount_to"].append(item["amount"]["to"])
         BANK_DICT["offer_count"].append(item["groupCount"])
 
+        # если записей больше чем одна
         if item["groupCount"] > 0:
             for group_item in item['groupItems']:
                 OFFERS_DICT["bank_name"].append(item["organization"]["name"]["short"])
@@ -86,6 +89,8 @@ def get_data():
     bank_df = pd.DataFrame(BANK_DICT)
     offers_df = pd.DataFrame(OFFERS_DICT)
 
+    logging.info('Data Preprocessing ...')
+
     # добавим "final_rate", предварительно предобработаем "rate" -> убираем %
     bank_df['rate'] = bank_df['rate'].apply(lambda x: x.strip('до% ')) # возвращает строку
     bank_df['rate'] = bank_df['rate'].astype('float') # меняем тип данных на вещественный
@@ -101,11 +106,6 @@ def get_data():
     bank_df['date'] = pd.Timestamp.today()
     offers_df['date'] = pd.Timestamp.today()
 
-    logging.info('Saving Tables ...')
+    logging.info('Data Preprocessing -> Success!')
 
-    # сохраняем в excel
-    bank_df.to_excel('../notebooks/scraped_data/banks.xlsx', index=False)
-    offers_df.to_excel('../notebooks/scraped_data/offers.xlsx', index=False)
-
-    # логирование (вывод в консоль)
-    logging.info('Data Successfully Parsed and Saved!')
+    return bank_df, offers_df
