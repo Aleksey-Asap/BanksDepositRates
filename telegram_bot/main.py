@@ -4,7 +4,7 @@ import logging
 
 from telebot import types
 from dotenv import load_dotenv
-from constants import (
+from .constants import (
     START_MESSAGE,
     GRAPH_BUTTON_TEXT,
     INTEREST_RATE_BUTTON_TEXT,
@@ -13,7 +13,7 @@ from constants import (
     INTEREST_RATE_RESPONSE_FOOTER,
 )
 
-from db import get_interest_rate_data
+from .db import get_interest_rate_data
 
 
 # конфигурируем logging / INFO
@@ -68,4 +68,7 @@ def handle_message(message):
         logging.info('Successfully sent message | RATE')
 
 
-bot.infinity_polling()
+def start_bot():
+    bot = telebot.TeleBot(TELEGRAM_TOKEN)
+    logging.info('Telegram Bot is up!')
+    bot.infinity_polling()

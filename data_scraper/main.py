@@ -2,7 +2,7 @@ import pandas as pd
 import requests
 import logging
 
-from constants import (
+from .constants import (
     MAIN_URL,
     QUERY_PARAMS,
     BANK_DICT,

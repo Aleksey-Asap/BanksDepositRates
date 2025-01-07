@@ -3,8 +3,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.sql import text
 from dotenv import load_dotenv
 
-from constants import INTEREST_RATE_QUERY
-from utils import is_docker_env
+from .constants import INTEREST_RATE_QUERY
+from .utils import is_docker_env
 
 # загружаем переменные среды
 load_dotenv()
