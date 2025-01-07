@@ -15,6 +15,9 @@ x-airflow-common: &airflow-common
     POSTGRES_DB_PASSWORD: ${POSTGRES_DB_PASSWORD}
     POSTGRES_DB_NAME: ${POSTGRES_DB_NAME}
     POSTGRES_DB_CONTAINER_PORT: ${POSTGRES_DB_CONTAINER_PORT}
+    TELEGRAM_TOKEN: ${TELEGRAM_TOKEN}
+    VLAD_CHAT_ID: ${VLAD_CHAT_ID}
+    ALEX_CHAT_ID: ${ALEX_CHAT_ID}
   volumes:
     - ${AIRFLOW_PROJ_DIR:-.}/airflow_volume/dags:/opt/airflow/dags
     - ${AIRFLOW_PROJ_DIR:-.}/airflow_volume/logs:/opt/airflow/logs
@@ -87,7 +90,8 @@ services:
   airflow-scheduler:
     <<: *airflow-common
     container_name: airflow_scheduler
-    command: scheduler
+    command: >
+      bash -c "pip install -e /opt/airflow && airflow scheduler"
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:8974/health"]
       interval: 30s
