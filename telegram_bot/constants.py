@@ -33,6 +33,6 @@ SELECT
 FROM
     banks
 ORDER BY
-    rate DESC
+    date DESC, rate DESC
 LIMIT 10
 """
