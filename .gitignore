@@ -148,6 +148,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+*_env/
  
 # <a href="https://www.jcchouinard.com/python-with-spyder-ide/">Spyder</a> project settings
 .spyderproject
@@ -173,5 +174,7 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+
+airflow_volume/logs
+airflow_volume/plugins
 airflow_volume/
-bank_deposits/
